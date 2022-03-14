@@ -7,22 +7,18 @@ const FeedbackForm = () => {
   const [btnDisabled, setBtnDisabled] = useState(true);
   const [message, setMessage] = useState('');
 
-  //   There is actually a bug with the way Brad does it in that he checks the length of text which is state in the handleTextChange function.
-  //   But state will not have updated until the next render is triggered by setText,
-  //   so in the scope of the handleTextChange function text is not the current value of the input and so should not be used for validating.
-
-  const handleTextChange = (e) => {
-    if (text === '') {
+  const handleTextChange = ({ target: { value } }) => {
+    if (value === '') {
       setBtnDisabled(true);
       setMessage(null);
-    } else if (text !== '' && text.trim().length <= 10) {
+    } else if (value.trim().length <= 10) {
       setBtnDisabled(true);
       setMessage('Text must be at least 10 characters');
     } else {
       setMessage(null);
       setBtnDisabled(false);
     }
-    setText(e.target.value);
+    setText(value);
   };
 
   return (
