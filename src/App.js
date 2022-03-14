@@ -14,11 +14,16 @@ const App = () => {
     }
   };
 
+  const addFeedback = (newFeedback) => {
+    newFeedback.id = Math.floor(Math.random() * 100_000);
+    setFeedback([newFeedback, ...feedback]);
+  };
+
   return (
     <>
       <Header />
       <div className='container'>
-        <FeedbackForm />
+        <FeedbackForm handleAdd={addFeedback} />
         <FeedbackStats feedback={feedback} />
         <FeedbackList feedback={feedback} handleDelete={deleteFeedback} />
       </div>
