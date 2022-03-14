@@ -1,18 +1,26 @@
-import Card from './shared/Card';
-import { useState } from 'react';
-import Button from './shared/Button';
-import RatingSelect from './RatingSelect';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import FeedbackContext from '../context/FeedbackContext';
+import RatingSelect from './RatingSelect';
+import Button from './shared/Button';
+import Card from './shared/Card';
 
 const FeedbackForm = () => {
-  const { addFeedback } = useContext(FeedbackContext);
+  const { addFeedback, feedbackEdit, updateFeedback } =
+    useContext(FeedbackContext);
+
   const [text, setText] = useState('');
   const [rating, setRating] = useState(10);
+  const [btnDisabled, setBtnDisabled] = useState(true);
 
-  const handleTextChange = (e) => setText(e.target.value);
-  const minChars = text.trim().length <= 10;
-  const minCharsMessage = 'Text must be at least 10 characters';
+  const minCharsMessage = 'Text must have at least 10 characters';
+
+  const handleTextChange = ({ target: { value } }) => {
+    if (value === '') setBtnDisabled(true);
+    else if (value.trim().length <= 10) setBtnDisabled(true);
+    else setBtnDisabled(false);
+
+    setText(value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,9 +28,20 @@ const FeedbackForm = () => {
       text,
       rating,
     };
-    addFeedback(newFeedback);
+    if (feedbackEdit.edit === true)
+      updateFeedback(feedbackEdit.item.id, newFeedback);
+    else addFeedback(newFeedback);
+
     setText('');
   };
+
+  useEffect(() => {
+    if (feedbackEdit.edit === true) {
+      setBtnDisabled(true);
+      setText(feedbackEdit.item.text);
+      setRating(feedbackEdit.item.rating);
+    }
+  }, [feedbackEdit]);
 
   return (
     <Card>
@@ -36,12 +55,12 @@ const FeedbackForm = () => {
             placeholder='Write a review'
             onChange={handleTextChange}
           />
-          <Button type='submit' isDisabled={minChars}>
+          <Button type='submit' isDisabled={btnDisabled}>
             Send
           </Button>
         </div>
 
-        {text && minChars && <div className='message'>{minCharsMessage}</div>}
+        {btnDisabled && <div className='message'>{minCharsMessage}</div>}
       </form>
     </Card>
   );
