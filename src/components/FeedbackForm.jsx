@@ -16,7 +16,7 @@ const FeedbackForm = () => {
 
   const handleTextChange = ({ target: { value } }) => {
     if (value === '') setBtnDisabled(true);
-    else if (value.trim().length <= 10) setBtnDisabled(true);
+    else if (value.trim().length < 10) setBtnDisabled(true);
     else setBtnDisabled(false);
 
     setText(value);
@@ -33,6 +33,7 @@ const FeedbackForm = () => {
     else addFeedback(newFeedback);
 
     setText('');
+    setBtnDisabled(true);
   };
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const FeedbackForm = () => {
     <Card>
       <form onSubmit={handleSubmit}>
         <h2>How would you rate your service with us?</h2>
-        <RatingSelect select={(rating) => setRating(rating)} />
+        <RatingSelect select={setRating} selected={rating} />
         <div className='input-group'>
           <input
             type='text'

@@ -34,6 +34,10 @@ export const FeedbackProvider = ({ children }) => {
           : item
       )
     );
+    setFeedbackEdit({
+      item: {},
+      edit: false,
+    });
   };
 
   const [feedbackEdit, setFeedbackEdit] = useState({
