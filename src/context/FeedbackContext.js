@@ -1,13 +1,22 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 const FeedbackContext = createContext();
 
 export const FeedbackProvider = ({ children }) => {
-  const [feedback, setFeedback] = useState([
-    { id: 1, text: 'Feedback1', rating: 10 },
-    { id: 2, text: 'Feedback2', rating: 7 },
-    { id: 3, text: 'Feedback3', rating: 3 },
-  ]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [feedback, setFeedback] = useState([]);
+
+  useEffect(() => {
+    fetchFeedback();
+  }, []);
+
+  const fetchFeedback = async () => {
+    const response = await fetch('http://localhost:4000/feedback');
+    const data = await response.json();
+
+    setFeedback(data);
+    setIsLoading(false);
+  };
 
   const addFeedback = (newFeedback) => {
     newFeedback.id = Math.floor(Math.random() * 100_000);
@@ -61,6 +70,7 @@ export const FeedbackProvider = ({ children }) => {
         editFeedback,
         feedbackEdit,
         updateFeedback,
+        isLoading,
       }}
     >
       {children}
