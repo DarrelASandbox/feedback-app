@@ -9,3 +9,4 @@
 ## Notes
 
 - [currentTarget property VS target property](https://stackoverflow.com/questions/10086427/what-is-the-exact-difference-between-currenttarget-property-and-target-property)
+- [Before you use context](https://reactjs.org/docs/context.html#before-you-use-context)
