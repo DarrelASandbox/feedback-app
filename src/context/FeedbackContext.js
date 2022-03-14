@@ -11,20 +11,27 @@ export const FeedbackProvider = ({ children }) => {
   }, []);
 
   const fetchFeedback = async () => {
-    const response = await fetch('http://localhost:4000/feedback');
+    const response = await fetch('/feedback?_sort=id&_order=desc');
     const data = await response.json();
 
     setFeedback(data);
     setIsLoading(false);
   };
 
-  const addFeedback = (newFeedback) => {
-    newFeedback.id = Math.floor(Math.random() * 100_000);
-    setFeedback([newFeedback, ...feedback]);
+  const addFeedback = async (newFeedback) => {
+    const response = await fetch('/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newFeedback),
+    });
+
+    const data = await response.json();
+    setFeedback([data, ...feedback]);
   };
 
-  const deleteFeedback = (id) => {
+  const deleteFeedback = async (id) => {
     if (window.confirm('Delete feedback?')) {
+      await fetch(`/feedback/${id}`, { method: 'DELETE' });
       setFeedback(feedback.filter((item) => item.id !== id));
     }
   };
@@ -32,13 +39,21 @@ export const FeedbackProvider = ({ children }) => {
   // When we call updateFeedback the updatedItem does not contain the id of the the feedback.
   // So spreading both item and updateItem, merges the two objects into one new object with any duplicate key value pairs
   // from the second object overwriting the key value pairs in the first object.
-  const updateFeedback = (id, updatedItem) => {
+  const updateFeedback = async (id, updatedItem) => {
+    const response = await fetch(`/feedback/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedItem),
+    });
+
+    const data = await response.json();
+
     setFeedback(
       feedback.map((item) =>
         item.id === id
           ? {
               ...item,
-              ...updatedItem,
+              ...data,
             }
           : item
       )
