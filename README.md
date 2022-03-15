@@ -1,5 +1,6 @@
 ## About The Project
 
+- React Front To Back 2022 course on Udemy
 - Learn modern React by building 4 projects including a Firebase 9 app and a full stack MERN app
 - Tutorial for Feedback App
 - [Original Repo: Feedback App](https://github.com/bradtraversy/feedback-app)
